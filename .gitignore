@@ -179,3 +179,18 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+
+# ===== CV / ML specific =====
+data/
+dataset/
+datasets/
+
+runs/
+wandb/
+logs/
+
+*.pth
+*.pt
+*.ckpt
+*.onnx
+*.npz
