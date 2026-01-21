@@ -61,6 +61,7 @@ class BraTS2p5D(Dataset):
         root: str | Path,
         max_patients: Optional[int] = None,
         only_tumor_slices: bool = False,
+        neg_to_pos_ratio: Optional[float] = None,
         cache_volumes: bool = False,
         seed: int = 0,
     ):
@@ -76,9 +77,11 @@ class BraTS2p5D(Dataset):
 
         self.patient_dirs: List[Path] = patient_dirs
         self.only_tumor_slices = only_tumor_slices
+        self.neg_to_pos_ratio = neg_to_pos_ratio
         self.cache_volumes = cache_volumes
 
         # Build slice index list
+        rng = np.random.default_rng(seed)
         self.slices: List[SliceRef] = []
         for p in self.patient_dirs:
             flair_path = next(p.glob("*_flair.nii*"), None)
@@ -97,7 +100,23 @@ class BraTS2p5D(Dataset):
                 for t in ts.tolist():
                     self.slices.append(SliceRef(p, int(t)))
             else:
-                for t in range(D):
+                tumor_pixels_per_slice = tumor.reshape(-1, D).sum(axis=0)
+                pos_ts = np.where(tumor_pixels_per_slice > 0)[0]
+                neg_ts = np.where(tumor_pixels_per_slice == 0)[0]
+
+                for t in pos_ts.tolist():
+                    self.slices.append(SliceRef(p, int(t)))
+
+                if self.neg_to_pos_ratio is None or len(pos_ts) == 0:
+                    chosen_neg = neg_ts
+                else:
+                    max_negs = int(np.ceil(len(pos_ts) * self.neg_to_pos_ratio))
+                    if max_negs >= len(neg_ts):
+                        chosen_neg = neg_ts
+                    else:
+                        chosen_neg = rng.choice(neg_ts, size=max_negs, replace=False)
+
+                for t in chosen_neg.tolist():
                     self.slices.append(SliceRef(p, int(t)))
 
         if len(self.slices) == 0:

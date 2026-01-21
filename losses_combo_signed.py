@@ -49,6 +49,14 @@ class WeightedBCEDiceSignedBoundaryLoss(nn.Module):
 
     def forward(self, logits, target, w_map, phi):
         lb = self.wbce(logits, target, w_map)
-        ld = self.dice(logits, target)
-        ls = self.sbd(logits, phi)
+        has_tumor = target.sum(dim=(1, 2, 3)) > 0
+        if has_tumor.any():
+            logits_pos = logits[has_tumor]
+            target_pos = target[has_tumor]
+            phi_pos = phi[has_tumor]
+            ld = self.dice(logits_pos, target_pos)
+            ls = self.sbd(logits_pos, phi_pos)
+        else:
+            ld = logits.new_tensor(0.0)
+            ls = logits.new_tensor(0.0)
         return self.w_bce * lb + self.w_dice * ld + self.w_sbd * ls

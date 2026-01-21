@@ -69,6 +69,7 @@ def main():
         root=root,
         max_patients=10,
         only_tumor_slices=False,
+        neg_to_pos_ratio=3.0,
         cache_volumes=True,
         seed=0,
     )
