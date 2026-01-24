@@ -2,8 +2,9 @@
 # Run: python src/eval_hd95.py
 
 import numpy as np
+from sympy import root
 import torch
-from torch.utils.data import DataLoader, random_split
+from torch.utils.data import DataLoader, random_split,  Subset
 
 from brats2p5d_dataset import BraTS2p5D
 from unet import UNet
@@ -44,10 +45,23 @@ def main():
     print("device:", device)
 
     # IMPORTANT: same split for both models
-    ds = BraTS2p5D(root=root, max_patients=10, only_tumor_slices=True, cache_volumes=True, seed=0)
-    n_val = max(1, int(len(ds) * 0.1))
-    n_train = len(ds) - n_val
-    _, val_ds = random_split(ds, [n_train, n_val], generator=torch.Generator().manual_seed(0))
+    #ds = BraTS2p5D(root=root, max_patients=10, only_tumor_slices=True, cache_volumes=True, seed=0)
+    #n_val = max(1, int(len(ds) * 0.1))
+    #n_train = len(ds) - n_val
+    #_, val_ds = random_split(ds, [n_train, n_val], generator=torch.Generator().manual_seed(0))
+        # Fixed patient split: use a deterministic subset of patients and evaluate on all slices.
+    max_patients = 10
+    val_fraction = 0.1
+    ds = BraTS2p5D(root=root, max_patients=10, only_tumor_slices=False, cache_volumes=True, seed=0)
+    patient_dirs = ds.patient_dirs  # already the same 10 patients as training
+    n_val_patients = max(1, int(len(patient_dirs) * val_fraction))
+    rng = np.random.default_rng(0)
+    p = list(patient_dirs)
+    rng.shuffle(p)
+    val_patients = set(p[:n_val_patients])
+
+    val_indices = [i for i, ref in enumerate(ds.slices) if ref.patient_dir in val_patients]
+    val_ds = Subset(ds, val_indices)
     val_dl = DataLoader(val_ds, batch_size=4, shuffle=False, num_workers=0)
 
     base = load_model("checkpoints/unet_2p5d_baseline.pt", device)
