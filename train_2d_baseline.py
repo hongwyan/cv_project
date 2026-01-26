@@ -68,7 +68,8 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print("device:", device)
 
-    ds = BraTS2D(root=root, max_patients=50, 
+    ds = BraTS2D(root=root, 
+                 max_patients=50, 
                  only_tumor_slices=False, 
                  neg_to_pos_ratio=3.0, 
                  cache_volumes=True, 
