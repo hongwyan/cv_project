@@ -9,6 +9,7 @@ from torch.utils.data import DataLoader, random_split,  Subset
 from brats2p5d_dataset import BraTS2p5D
 from unet import UNet
 from metrics_boundary import hd95_2d
+from losses import dice_score
 
 
 def load_model(ckpt_path, device):
@@ -20,23 +21,48 @@ def load_model(ckpt_path, device):
 
 
 @torch.no_grad()
-def eval_hd95(model, dl, device):
-    vals = []
+def eval_metrics(model, dl, device):
+    hd_vals = []
+    dice_total = 0.0
+    dice_count = 0
+    fp_slices = 0
+    neg_slices = 0
+
     for x, y in dl:
         x = x.to(device, non_blocking=True)
+        y = y.to(device, non_blocking=True)
         logits = model(x)
+
+        has_tumor = y.sum(dim=(1, 2, 3)) > 0
+        if has_tumor.any():
+            logits_pos = logits[has_tumor]
+            y_pos = y[has_tumor]
+            dice_total += dice_score(logits_pos, y_pos).item() * logits_pos.size(0)
+            dice_count += logits_pos.size(0)
+
+        preds = (torch.sigmoid(logits).view(logits.size(0), -1) > 0.5).any(dim=1)
+        neg_mask = ~has_tumor
+        if neg_mask.any():
+            neg_slices += int(neg_mask.sum().item())
+            fp_slices += int(preds[neg_mask].sum().item())
+
         pred = (torch.sigmoid(logits) > 0.5).float().cpu().numpy()  # (B,1,H,W)
-        gt = y.numpy()  # (B,1,H,W)
+        gt = y.cpu().numpy() # (B,1,H,W)
         for i in range(pred.shape[0]):
             p = pred[i, 0] > 0.5
             g = gt[i, 0] > 0.5
             # evaluate only when GT exists (tumor slice)
             if g.sum() == 0:
                 continue
-            vals.append(hd95_2d(p, g))
-    vals = np.array(vals, dtype=np.float32)
-    vals = vals[np.isfinite(vals)]
-    return float(vals.mean()), float(np.median(vals)), int(vals.shape[0])
+            hd_vals.append(hd95_2d(p, g))
+
+    hd_vals = np.array(hd_vals, dtype=np.float32)
+    hd_vals = hd_vals[np.isfinite(hd_vals)]
+    mean_hd = float(hd_vals.mean()) if hd_vals.size else float("nan")
+    median_hd = float(np.median(hd_vals)) if hd_vals.size else float("nan")
+    fpr = fp_slices / max(neg_slices, 1)
+    dice = dice_total / max(dice_count, 1)
+    return mean_hd, median_hd, int(hd_vals.shape[0]), dice, fpr
 
 
 def main():
@@ -69,15 +95,15 @@ def main():
     wpbd = load_model("checkpoints/unet_2p5d_weighted_plus_signedboundary.pt", device)
  
 
-    mean_b, med_b, n = eval_hd95(base, val_dl, device)
-    mean_w, med_w, _ = eval_hd95(wbd,  val_dl, device)
-    mean_bw, med_bw, u = eval_hd95(wpbd, val_dl, device)
+    mean_b, med_b, n, dice_b, fpr_b = eval_metrics(base, val_dl, device)
+    mean_w, med_w, _, dice_w, fpr_w = eval_metrics(wbd, val_dl, device)
+    mean_bw, med_bw, u, dice_bw, fpr_bw = eval_metrics(wpbd, val_dl, device)
 
 
     print(f"HD95 (px) over {n} val slices with tumor:")
-    print(f"  baseline: mean={mean_b:.3f}, median={med_b:.3f}")
-    print(f"  weighted: mean={mean_w:.3f}, median={med_w:.3f}")
-    print(f"  bw: mean={mean_bw:.3f}, median={med_bw:.3f}")
+    print(f"  baseline: mean={mean_b:.3f}, median={med_b:.3f}, dice={dice_b:.3f}, fpr={fpr_b:.3f}")
+    print(f"  weighted: mean={mean_w:.3f}, median={med_w:.3f}, dice={dice_w:.3f}, fpr={fpr_w:.3f}")
+    print(f"  bw: mean={mean_bw:.3f}, median={med_bw:.3f}, dice={dice_bw:.3f}, fpr={fpr_bw:.3f}")
 
 
 if __name__ == "__main__":

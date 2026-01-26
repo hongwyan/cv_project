@@ -83,7 +83,7 @@ def main():
 
     ds = BraTS2p5D(
         root=root,
-        max_patients=10,
+        max_patients=50,
         only_tumor_slices=False,
         neg_to_pos_ratio=3.0,
         cache_volumes=True,

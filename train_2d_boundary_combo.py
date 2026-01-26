@@ -32,9 +32,11 @@ def set_seed(seed=0):
 @torch.no_grad()
 def evaluate(model, dl, criterion, device):
     model.eval()
-    total_loss = 0.0
-    total_dice = 0.0
-    n = 0
+    total_loss_pos = 0.0
+    total_dice_pos = 0.0
+    n_pos = 0
+    fp_slices = 0
+    neg_slices = 0
 
     for x, y in dl:
         x = x.to(device, non_blocking=True)
@@ -47,19 +49,33 @@ def evaluate(model, dl, criterion, device):
         phi = np.stack([normalize_clip_phi(signed_distance_map_2d(y_np[i, 0]), clip=10.0)
                         for i in range(y_np.shape[0])], axis=0)
 
-        w = torch.from_numpy(w).unsqueeze(1).to(device, non_blocking=True)      # (B,1,H,W)
-        phi = torch.from_numpy(phi).unsqueeze(1).to(device, non_blocking=True)  # (B,1,H,W)
+        w = torch.from_numpy(w).unsqueeze(1).to(device, non_blocking=True)
+        phi = torch.from_numpy(phi).unsqueeze(1).to(device, non_blocking=True)
 
         logits = model(x)
-        loss = criterion(logits, y, w, phi)
-        dsc = dice_score(logits, y)
+        has_tumor = y.sum(dim=(1, 2, 3)) > 0
+        if has_tumor.any():
+            logits_pos = logits[has_tumor]
+            y_pos = y[has_tumor]
+            w_pos = w[has_tumor]
+            phi_pos = phi[has_tumor]
+            loss_pos = criterion(logits_pos, y_pos, w_pos, phi_pos)
+            dsc_pos = dice_score(logits_pos, y_pos)
+            bs_pos = logits_pos.size(0)
+            total_loss_pos += loss_pos.item() * bs_pos
+            total_dice_pos += dsc_pos.item() * bs_pos
+            n_pos += bs_pos
 
-        bs = x.size(0)
-        total_loss += loss.item() * bs
-        total_dice += dsc.item() * bs
-        n += bs
+        preds = (torch.sigmoid(logits).view(logits.size(0), -1) > 0.5).any(dim=1)
+        neg_mask = ~has_tumor
+        if neg_mask.any():
+            neg_slices += int(neg_mask.sum().item())
+            fp_slices += int(preds[neg_mask].sum().item())
 
-    return total_loss / max(n, 1), total_dice / max(n, 1)
+    avg_loss = total_loss_pos / max(n_pos, 1)
+    avg_dice = total_dice_pos / max(n_pos, 1)
+    fpr = fp_slices / max(neg_slices, 1)
+    return avg_loss, avg_dice, fpr
 
 
 def main():
@@ -69,7 +85,12 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print("device:", device)
 
-    ds = BraTS2D(root=root, max_patients=10, only_tumor_slices=True, cache_volumes=True, seed=0)
+    ds = BraTS2D(root=root, 
+                 max_patients=50, 
+                 only_tumor_slices=False, 
+                 neg_to_pos_ratio=3.0,
+                 cache_volumes=True, 
+                 seed=0)
 
     n_val = max(1, int(len(ds) * 0.1))
     n_train = len(ds) - n_val
@@ -89,8 +110,12 @@ def main():
         t0 = time.time()
         model.train()
 
-        running_loss = 0.0
-        running_dice = 0.0
+        running_loss_pos = 0.0
+        running_dice_pos = 0.0
+        train_pos = 0
+        fp_slices = 0
+        neg_slices = 0  
+        running_dice = 0.0  
         steps = 0
 
         for x, y in train_dl:
@@ -116,28 +141,42 @@ def main():
             optim.step()
 
             with torch.no_grad():
-                dsc = dice_score(logits, y)
+                has_tumor = y.sum(dim=(1, 2, 3)) > 0
+                if has_tumor.any():
+                    logits_pos = logits[has_tumor]
+                    y_pos = y[has_tumor]
+                    w_pos = w[has_tumor]
+                    phi_pos = phi[has_tumor]
+                    loss_pos = criterion(logits_pos, y_pos, w_pos, phi_pos)
+                    dsc_pos = dice_score(logits_pos, y_pos)
+                    bs_pos = logits_pos.size(0)
+                    running_loss_pos += loss_pos.item() * bs_pos
+                    running_dice_pos += dsc_pos.item() * bs_pos
+                    train_pos += bs_pos
 
-            running_loss += loss.item()
-            running_dice += dsc.item()
-            steps += 1
+                preds = (torch.sigmoid(logits).view(logits.size(0), -1) > 0.5).any(dim=1)
+                neg_mask = ~has_tumor
+                if neg_mask.any():
+                    neg_slices += int(neg_mask.sum().item())
+                    fp_slices += int(preds[neg_mask].sum().item())
 
-        train_loss = running_loss / max(steps, 1)
-        train_dice = running_dice / max(steps, 1)
-        val_loss, val_dice = evaluate(model, val_dl, criterion, device)
+        train_loss = running_loss_pos / max(train_pos, 1)
+        train_dice = running_dice_pos / max(train_pos, 1)
+        train_fpr = fp_slices / max(neg_slices, 1)
+        val_loss, val_dice, val_fpr = evaluate(model, val_dl, criterion, device)
 
+        dt = time.time() - t0
         print(
             f"Epoch {epoch:02d} | "
-            f"train_loss={train_loss:.4f} train_dice={train_dice:.4f} | "
-            f"val_loss={val_loss:.4f} val_dice={val_dice:.4f} | "
-            f"time={time.time()-t0:.1f}s"
+            f"train_loss={train_loss:.4f} train_dice={train_dice:.4f} train_fpr={train_fpr:.4f} | "
+            f"val_loss={val_loss:.4f} val_dice={val_dice:.4f} val_fpr={val_fpr:.4f} | "
+            f"time={dt:.1f}s"
         )
 
     out = Path("checkpoints"); out.mkdir(exist_ok=True)
     ckpt = out / "unet_2d_boundary_combo.pt"
     torch.save({"model": model.state_dict()}, ckpt)
     print("saved:", ckpt)
-
 
 if __name__ == "__main__":
     main()
