@@ -45,7 +45,7 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print("device:", device)
 
-    ds = BraTS2D(root=root, max_patients=10, only_tumor_slices=True, cache_volumes=True, seed=0)
+    ds = BraTS2D(root=root, max_patients=50, only_tumor_slices=False, cache_volumes=True, seed=0)
     n_val = max(1, int(len(ds) * 0.1))
     n_train = len(ds) - n_val
     _, val_ds = random_split(ds, [n_train, n_val], generator=torch.Generator().manual_seed(0))

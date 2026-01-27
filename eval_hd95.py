@@ -78,7 +78,7 @@ def main():
         # Fixed patient split: use a deterministic subset of patients and evaluate on all slices.
     max_patients = 10
     val_fraction = 0.1
-    ds = BraTS2p5D(root=root, max_patients=10, only_tumor_slices=False, cache_volumes=True, seed=0)
+    ds = BraTS2p5D(root=root, max_patients=50, only_tumor_slices=False, cache_volumes=True, seed=0)
     patient_dirs = ds.patient_dirs  # already the same 10 patients as training
     n_val_patients = max(1, int(len(patient_dirs) * val_fraction))
     rng = np.random.default_rng(0)
@@ -100,7 +100,7 @@ def main():
     mean_bw, med_bw, u, dice_bw, fpr_bw = eval_metrics(wpbd, val_dl, device)
 
 
-    print(f"HD95 (px) over {n} val slices with tumor:")
+    print(f"HD95 (px) over {n},{_}, {u} val slices with tumor:")
     print(f"  baseline: mean={mean_b:.3f}, median={med_b:.3f}, dice={dice_b:.3f}, fpr={fpr_b:.3f}")
     print(f"  weighted: mean={mean_w:.3f}, median={med_w:.3f}, dice={dice_w:.3f}, fpr={fpr_w:.3f}")
     print(f"  bw: mean={mean_bw:.3f}, median={med_bw:.3f}, dice={dice_bw:.3f}, fpr={fpr_bw:.3f}")

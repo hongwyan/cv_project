@@ -102,7 +102,7 @@ def main():
     model = UNet(in_ch=1, out_ch=1, base_ch=32).to(device)
 
     # keep small to stay stable; try 0.0005/0.001/0.002 if you want
-    criterion = WeightedBCEDiceSignedBoundaryLoss(w_bce=1.0, w_dice=1.0, w_sboundary=0.001).to(device)
+    criterion = WeightedBCEDiceSignedBoundaryLoss(w_bce=1.0, w_dice=1.0, w_sboundary=0.0001).to(device)
     optim = torch.optim.AdamW(model.parameters(), lr=1e-3, weight_decay=1e-4)
 
     epochs = 30
