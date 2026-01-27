@@ -17,10 +17,13 @@ def _surface_points(mask: np.ndarray) -> np.ndarray:
 def hd95_2d(pred: np.ndarray, gt: np.ndarray) -> float:
     """
     pred, gt: (H,W) binary {0,1}
-    returns HD95 in pixels. If one is empty, returns np.inf (you can skip those in averaging).
+    returns HD95 in pixels. If both are empty, returns 0.0. If only one is empty,
+    returns np.inf (you can skip those in averaging).
     """
     p = _surface_points(pred)
     g = _surface_points(gt)
+    if p.shape[0] == 0 and g.shape[0] == 0:
+        return 0.0
     if p.shape[0] == 0 or g.shape[0] == 0:
         return np.inf
 
