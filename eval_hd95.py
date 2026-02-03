@@ -42,7 +42,10 @@ def eval_metrics(model, dl, device):
             dice_count += logits_pos.size(0)
             pos_slices += int(has_tumor.sum().item())
 
-        preds = (torch.sigmoid(logits).view(logits.size(0), -1) > 0.5).any(dim=1)
+        thr = 0.7
+
+        # ---- slice-level existence prediction (for FPR/FNR) ----
+        preds = (torch.sigmoid(logits).view(logits.size(0), -1) > thr).any(dim=1)
         neg_mask = ~has_tumor
         if neg_mask.any():
             neg_slices += int(neg_mask.sum().item())
@@ -50,15 +53,19 @@ def eval_metrics(model, dl, device):
         if has_tumor.any():
             fn_slices += int((~preds[has_tumor]).sum().item())
 
-        pred = (torch.sigmoid(logits) > 0.5).float().cpu().numpy()  # (B,1,H,W)
+        pred = (torch.sigmoid(logits) > thr).float().cpu().numpy()  # (B,1,H,W)
         gt = y.cpu().numpy()  # (B,1,H,W)
         for i in range(pred.shape[0]):
-            p = pred[i, 0] > 0.5
-            g = gt[i, 0] > 0.5
+            p = pred[i, 0] > 0.50
+            g = gt[i, 0] > 0.50
             # evaluate only when GT exists (tumor slice)
             if g.sum() == 0:
                 continue
             hd_vals.append(hd95_2d(p, g))
+
+
+
+
 
     hd_vals = np.array(hd_vals, dtype=np.float32)
     hd_vals = hd_vals[np.isfinite(hd_vals)]
