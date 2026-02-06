@@ -73,7 +73,7 @@ def main():
                  only_tumor_slices=False, 
                  neg_to_pos_ratio=3.0, 
                  cache_volumes=True, 
-                 seed=0
+                 seed=1
                  )
     n_val = max(1, int(len(ds) * 0.1))
     n_train = len(ds) - n_val
@@ -138,7 +138,7 @@ def main():
         )
 
     out = Path("checkpoints"); out.mkdir(exist_ok=True)
-    ckpt = out / "unet_2d_baseline.pt"
+    ckpt = out / "unet_2d_baseline_seed1.pt"
     torch.save({"model": model.state_dict()}, ckpt)
     print("saved:", ckpt)
 

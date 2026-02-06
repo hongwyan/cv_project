@@ -82,7 +82,7 @@ def main():
         only_tumor_slices=False,
         neg_to_pos_ratio=3.0,
         cache_volumes=True,
-        seed=0,
+        seed=2,
     )
 
     val_frac = 0.1

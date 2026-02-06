@@ -85,7 +85,7 @@ def main():
     # Fixed patient split: use a deterministic subset of patients and evaluate on all slices.
   
     val_fraction = 0.1
-    ds = BraTS2p5D(root=root, max_patients=50, only_tumor_slices=False, cache_volumes=True, seed=0)
+    ds = BraTS2p5D(root=root, max_patients=50, only_tumor_slices=False, cache_volumes=True, seed=2)
     patient_dirs = ds.patient_dirs
     n_val_patients = max(1, int(len(patient_dirs) * val_fraction))
     val_patients = set(patient_dirs[-n_val_patients:])

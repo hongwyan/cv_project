@@ -174,7 +174,7 @@ def main():
         )
 
     out = Path("checkpoints"); out.mkdir(exist_ok=True)
-    ckpt = out / "unet_2d_boundary_combo.pt"
+    ckpt = out / "unet_2d_boundary_combo_seed0.pt"
     torch.save({"model": model.state_dict()}, ckpt)
     print("saved:", ckpt)
 
