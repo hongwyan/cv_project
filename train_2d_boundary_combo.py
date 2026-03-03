@@ -14,11 +14,11 @@ from torch.utils.data import DataLoader, random_split
 
 from brats2d_dataset import BraTS2D
 from unet import UNet
-from losses import dice_score
+from losses_Dice import dice_score
 
 from boundary_utils import boundary_weight_map
 from boundary_utils_signed import signed_distance_map_2d, normalize_clip_phi
-from losses_combo_signed import WeightedBCEDiceSignedBoundaryLoss
+from losses_boundary_combo import WeightedBCEDiceSignedBoundaryLoss
 
 
 def set_seed(seed=0):

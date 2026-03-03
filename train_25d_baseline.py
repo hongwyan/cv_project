@@ -15,7 +15,7 @@ from torch.utils.data import DataLoader, random_split
 
 from brats2p5d_dataset import BraTS2p5D
 from unet import UNet
-from losses import BCEDiceLoss, dice_score
+from losses_Dice import BCEDiceLoss, dice_score
 
 
 def set_seed(seed: int = 0):

@@ -11,7 +11,7 @@ from torch.utils.data import DataLoader, random_split, Subset
 from brats2d_dataset import BraTS2D
 from unet import UNet
 from metrics_boundary import hd95_2d
-from losses import dice_score
+from losses_Dice import dice_score
 
 
 def load_model(ckpt_path: str, device):

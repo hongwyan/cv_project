@@ -7,7 +7,7 @@ from torch.utils.data import DataLoader, Subset
 
 from brats2p5d_dataset import BraTS2p5D
 from unet import UNet
-from losses import dice_score
+from losses_Dice import dice_score
 from metrics_boundary import hd95_2d
 
 

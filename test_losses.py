@@ -1,6 +1,6 @@
 # src/test_losses.py
 import torch
-from losses import DiceLoss, BCEDiceLoss, dice_score
+from losses_Dice import DiceLoss, BCEDiceLoss, dice_score
 
 B, H, W = 4, 240, 240
 logits = torch.randn(B, 1, H, W)

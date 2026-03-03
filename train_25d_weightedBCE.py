@@ -12,8 +12,8 @@ from torch.utils.data import DataLoader, random_split
 
 from brats2p5d_dataset import BraTS2p5D
 from unet import UNet
-from losses_boundary import WeightedBCEDiceLoss
-from losses import dice_score  # reuse your dice_score (thresholded)
+from loss_weightedBCE_plus_Dice import WeightedBCEDiceLoss
+from losses_Dice import dice_score  # reuse your dice_score (thresholded)
 from boundary_utils import boundary_weight_map
 
 

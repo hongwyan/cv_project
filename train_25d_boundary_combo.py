@@ -11,10 +11,10 @@ from torch.utils.data import DataLoader, random_split
 
 from brats2p5d_dataset import BraTS2p5D
 from unet import UNet
-from losses import dice_score
+from losses_Dice import dice_score
 from boundary_utils import boundary_weight_map  # your existing weight map (distance-to-boundary -> exp)
 from boundary_utils_signed import signed_distance_map_2d, normalize_clip_phi
-from losses_combo_signed import WeightedBCEDiceSignedBoundaryLoss
+from losses_boundary_combo import WeightedBCEDiceSignedBoundaryLoss
 
 
 def set_seed(seed: int = 0):
