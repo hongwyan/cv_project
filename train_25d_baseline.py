@@ -82,7 +82,7 @@ def main():
         only_tumor_slices=False,
         neg_to_pos_ratio=3.0,
         cache_volumes=True,
-        seed=2,
+        seed=3,
     )
 
     # Split
@@ -162,7 +162,7 @@ def main():
     # Save checkpoint
     out = Path("checkpoints")
     out.mkdir(exist_ok=True)
-    ckpt_path = out / "unet_2p5d_baseline.pt"
+    ckpt_path = out / "unet_2p5d_baseline_seed3.pt"
     torch.save({"model": model.state_dict()}, ckpt_path)
     print("saved:", ckpt_path)
 

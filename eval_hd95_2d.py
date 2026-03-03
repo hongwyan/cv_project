@@ -114,15 +114,15 @@ def main():
 
     # Fixed patient split: use a deterministic subset of patients and evaluate on all slices.
   
-    ds = BraTS2D(root=root, max_patients=50, only_tumor_slices=False, cache_volumes=True, seed=1)
+    ds = BraTS2D(root=root, max_patients=50, only_tumor_slices=False, cache_volumes=True, seed=3)
     n_val = max(1, int(len(ds) * 0.1))
     n_train = len(ds) - n_val
     _, val_ds = random_split(ds, [n_train, n_val], generator=torch.Generator().manual_seed(0))
     val_dl = DataLoader(val_ds, batch_size=4, shuffle=False, num_workers=0)
 
     # Change this to whichever 2D checkpoint you want to evaluate
-    ckpt_path = "checkpoints/unet_2d_baseline_seed1.pt"
-    ckpt_path2 = "checkpoints/unet_2d_boundary_combo_seed1.pt"
+    ckpt_path = "checkpoints/unet_2d_baseline_seed3.pt"
+    ckpt_path2 = "checkpoints/unet_2d_boundary_combo_seed3.pt"
 
     model = load_model(ckpt_path, device)
     model2 = load_model(ckpt_path2, device)

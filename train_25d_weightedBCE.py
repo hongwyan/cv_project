@@ -1,20 +1,20 @@
-# src/train_combo_signed.py
-# Run: python src/train_combo_signed.py
+# src/train_boundary.py
+# Run: python src/train_boundary.py
 
 from __future__ import annotations
 from pathlib import Path
 import time
-import numpy as np
+from xml.parsers.expat import model
+import numpy as np 
 
 import torch
 from torch.utils.data import DataLoader, random_split
 
 from brats2p5d_dataset import BraTS2p5D
 from unet import UNet
-from losses import dice_score
-from boundary_utils import boundary_weight_map  # your existing weight map (distance-to-boundary -> exp)
-from boundary_utils_signed import signed_distance_map_2d, normalize_clip_phi
-from losses_combo_signed import WeightedBCEDiceSignedBoundaryLoss
+from losses_boundary import WeightedBCEDiceLoss
+from losses import dice_score  # reuse your dice_score (thresholded)
+from boundary_utils import boundary_weight_map
 
 
 def set_seed(seed: int = 0):
@@ -34,19 +34,15 @@ def evaluate(model, dl, criterion, device):
     fp_slices = 0
     neg_slices = 0
 
+
     for x, y in dl:
         x = x.to(device, non_blocking=True)
         y = y.to(device, non_blocking=True)
 
+        # build dist maps on CPU from y (binary)
         y_np = y.cpu().numpy()  # (B,1,H,W)
-
-        w = np.stack([boundary_weight_map(y_np[i, 0], sigma=3.0, w0=5.0, base=1.0)
-                      for i in range(y_np.shape[0])], axis=0)
-        phi = np.stack([normalize_clip_phi(signed_distance_map_2d(y_np[i, 0]), clip=10.0)
-                        for i in range(y_np.shape[0])], axis=0)
-
-        w = torch.from_numpy(w).unsqueeze(1).to(device, non_blocking=True)
-        phi = torch.from_numpy(phi).unsqueeze(1).to(device, non_blocking=True)
+        w = np.stack([boundary_weight_map(y_np[i, 0], sigma=3.0, w0=5.0, base=1.0) for i in range(y_np.shape[0])], axis=0)
+        w = torch.from_numpy(w).unsqueeze(1).to(device, non_blocking=True)  # (B,1,H,W)
 
         logits = model(x)
         has_tumor = y.sum(dim=(1, 2, 3)) > 0
@@ -54,8 +50,7 @@ def evaluate(model, dl, criterion, device):
             logits_pos = logits[has_tumor]
             y_pos = y[has_tumor]
             w_pos = w[has_tumor]
-            phi_pos = phi[has_tumor]
-            loss_pos = criterion(logits_pos, y_pos, w_pos, phi_pos)
+            loss_pos = criterion(logits_pos, y_pos, w_pos)
             dsc_pos = dice_score(logits_pos, y_pos)
             bs_pos = logits_pos.size(0)
             total_loss_pos += loss_pos.item() * bs_pos
@@ -87,10 +82,11 @@ def main():
         only_tumor_slices=False,
         neg_to_pos_ratio=3.0,
         cache_volumes=True,
-        seed=2,
+        seed=3,
     )
 
-    n_val = max(1, int(len(ds) * 0.1))
+    val_frac = 0.1
+    n_val = max(1, int(len(ds) * val_frac))
     n_train = len(ds) - n_val
     train_ds, val_ds = random_split(ds, [n_train, n_val], generator=torch.Generator().manual_seed(0))
 
@@ -99,8 +95,8 @@ def main():
 
     model = UNet(in_ch=3, out_ch=1, base_ch=32).to(device)
 
-    # Start VERY small to avoid collapse; you can try 0.0005 / 0.001 / 0.002
-    criterion = WeightedBCEDiceSignedBoundaryLoss(w_bce=1.0, w_dice=1.0, w_sboundary=0.0001).to(device)
+    # boundary weight starts small; you can try 0.005 ~ 0.05
+    criterion = WeightedBCEDiceLoss(w_bce=1.0, w_dice=1.0).to(device)
     optim = torch.optim.AdamW(model.parameters(), lr=1e-3, weight_decay=1e-4)
 
     epochs = 30
@@ -114,23 +110,19 @@ def main():
         fp_slices = 0
         neg_slices = 0
 
+
         for x, y in train_dl:
             x = x.to(device, non_blocking=True)
             y = y.to(device, non_blocking=True)
 
-            y_np = y.cpu().numpy()
-
-            w = np.stack([boundary_weight_map(y_np[i, 0], sigma=3.0, w0=5.0, base=1.0)
-                          for i in range(y_np.shape[0])], axis=0)
-            phi = np.stack([normalize_clip_phi(signed_distance_map_2d(y_np[i, 0]), clip=10.0)
-                            for i in range(y_np.shape[0])], axis=0)
-
-            w = torch.from_numpy(w).unsqueeze(1).to(device, non_blocking=True)
-            phi = torch.from_numpy(phi).unsqueeze(1).to(device, non_blocking=True)
+            # dist maps on CPU
+            y_np = y.cpu().numpy()  # (B,1,H,W)
+            w = np.stack([boundary_weight_map(y_np[i, 0], sigma=3.0, w0=5.0, base=1.0) for i in range(y_np.shape[0])], axis=0)
+            w = torch.from_numpy(w).unsqueeze(1).to(device, non_blocking=True)  # (B,1,H,W)
 
             optim.zero_grad(set_to_none=True)
             logits = model(x)
-            loss = criterion(logits, y, w, phi)
+            loss = criterion(logits, y, w)
 
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
@@ -142,8 +134,7 @@ def main():
                     logits_pos = logits[has_tumor]
                     y_pos = y[has_tumor]
                     w_pos = w[has_tumor]
-                    phi_pos = phi[has_tumor]
-                    loss_pos = criterion(logits_pos, y_pos, w_pos, phi_pos)
+                    loss_pos = criterion(logits_pos, y_pos, w_pos)
                     dsc_pos = dice_score(logits_pos, y_pos)
                     bs_pos = logits_pos.size(0)
                     running_loss_pos += loss_pos.item() * bs_pos
@@ -171,7 +162,7 @@ def main():
 
     out = Path("checkpoints")
     out.mkdir(exist_ok=True)
-    ckpt_path = out / "unet_2p5d_weighted_plus_signedboundary.pt"
+    ckpt_path = out / "unet_2p5d_boundary_seed3.pt"
     torch.save({"model": model.state_dict()}, ckpt_path)
     print("saved:", ckpt_path)
 

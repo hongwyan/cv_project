@@ -85,7 +85,7 @@ def main():
     # Fixed patient split: use a deterministic subset of patients and evaluate on all slices.
   
     val_fraction = 0.1
-    ds = BraTS2p5D(root=root, max_patients=50, only_tumor_slices=False, cache_volumes=True, seed=2)
+    ds = BraTS2p5D(root=root, max_patients=50, only_tumor_slices=False, cache_volumes=True, seed=3)
     patient_dirs = ds.patient_dirs
     n_val_patients = max(1, int(len(patient_dirs) * val_fraction))
     val_patients = set(patient_dirs[-n_val_patients:])
@@ -93,9 +93,9 @@ def main():
     val_ds = Subset(ds, val_indices)
     val_dl = DataLoader(val_ds, batch_size=4, shuffle=False, num_workers=0)
 
-    base = load_model("checkpoints/unet_2p5d_baseline.pt", device)
-    wbd  = load_model("checkpoints/unet_2p5d_boundary.pt", device)
-    wpbd = load_model("checkpoints/unet_2p5d_weighted_plus_signedboundary.pt", device)
+    base = load_model("checkpoints/unet_2p5d_baseline_seed3.pt", device)
+    wbd  = load_model("checkpoints/unet_2p5d_boundary_seed3.pt", device)
+    wpbd = load_model("checkpoints/unet_2p5d_weighted_plus_signedboundary_seed3.pt", device)
  
 
     mean_b, med_b, n, dice_b, fpr_b, fnr_b = eval_metrics(base, val_dl, device)
