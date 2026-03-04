@@ -14,6 +14,14 @@ class BraTS2D(Dataset):
     def __len__(self):
         return len(self.ds)
 
+    @property
+    def patient_dirs(self):
+        return self.ds.patient_dirs
+
+    @property
+    def slices(self):
+        return self.ds.slices
+
     def __getitem__(self, idx):
         x, y = self.ds[idx]              # x: (3,H,W), y: (1,H,W)
         x2d = x[1:2, ...].contiguous()   # keep center slice -> (1,H,W)
