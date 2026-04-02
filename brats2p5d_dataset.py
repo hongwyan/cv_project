@@ -82,7 +82,8 @@ class BraTS2p5D(Dataset):
 
         # Build slice index list
         rng = np.random.default_rng(seed)
-        self.slices: List[SliceRef] = []
+        pos_slices: List[SliceRef] = []
+        remaining_slices: List[SliceRef] = []
         for p in self.patient_dirs:
             flair_path = next(p.glob("*_flair.nii*"), None)
             seg_path = next(p.glob("*_seg.nii*"), None)
@@ -98,26 +99,33 @@ class BraTS2p5D(Dataset):
                 tumor_pixels_per_slice = tumor.reshape(-1, D).sum(axis=0)
                 ts = np.where(tumor_pixels_per_slice > 0)[0]
                 for t in ts.tolist():
-                    self.slices.append(SliceRef(p, int(t)))
+                    pos_slices.append(SliceRef(p, int(t)))
             else:
                 tumor_pixels_per_slice = tumor.reshape(-1, D).sum(axis=0)
                 pos_ts = np.where(tumor_pixels_per_slice > 0)[0]
                 neg_ts = np.where(tumor_pixels_per_slice == 0)[0]
 
                 for t in pos_ts.tolist():
-                    self.slices.append(SliceRef(p, int(t)))
+                    pos_slices.append(SliceRef(p, int(t)))
+                for t in neg_ts.tolist():
+                    remaining_slices.append(SliceRef(p, int(t)))
 
-                if self.neg_to_pos_ratio is None or len(pos_ts) == 0:
-                    chosen_neg = neg_ts
-                else:
-                    max_negs = int(np.ceil(len(pos_ts) * self.neg_to_pos_ratio))
-                    if max_negs >= len(neg_ts):
-                        chosen_neg = neg_ts
-                    else:
-                        chosen_neg = rng.choice(neg_ts, size=max_negs, replace=False)
+        if self.only_tumor_slices:
+            self.slices = pos_slices
+        elif self.neg_to_pos_ratio is None or len(pos_slices) == 0:
+            self.slices = pos_slices + remaining_slices
+        else:
+            target_random = int(np.ceil(len(pos_slices) * self.neg_to_pos_ratio))
+            if target_random >= len(remaining_slices):
+                chosen_remaining = remaining_slices
+            else:
+                idx = rng.choice(len(remaining_slices), size=target_random, replace=False)
+                chosen_remaining = [remaining_slices[i] for i in sorted(idx)]
+            self.slices = pos_slices + chosen_remaining
 
-                for t in chosen_neg.tolist():
-                    self.slices.append(SliceRef(p, int(t)))
+        if len(self.slices) > 1:
+            order = rng.permutation(len(self.slices))
+            self.slices = [self.slices[i] for i in order]
 
         if len(self.slices) == 0:
             raise RuntimeError("No slices indexed. Check root path and filenames.")

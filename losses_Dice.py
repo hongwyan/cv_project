@@ -27,13 +27,23 @@ class DiceLoss(nn.Module):
         return 1.0 - dice.mean()
 
 
+class DiceOnlyLoss(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.dice = DiceLoss()
+
+    def forward(self, logits: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
+        return self.dice(logits, target)
+
+
 class BCEDiceLoss(nn.Module):
     """
     BCEWithLogits + Dice
     """
-    def __init__(self, bce_weight: float = 1.0, dice_weight: float = 1.0):
+    def __init__(self, bce_weight: float = 1.0, dice_weight: float = 1.0, pos_weight: float = 1.0):
         super().__init__()
-        self.bce = nn.BCEWithLogitsLoss()
+        self.register_buffer("pos_weight", torch.tensor([pos_weight], dtype=torch.float32))
+        self.bce = nn.BCEWithLogitsLoss(pos_weight=self.pos_weight)
         self.dice = DiceLoss()
         self.bce_w = bce_weight
         self.dice_w = dice_weight

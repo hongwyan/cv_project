@@ -1,0 +1,12 @@
+{"time": "2026-04-01T08:37:54Z", "status": "start", "dataset_seed": 0, "model": "2d_bce_dice", "output_dir": "result_500\\2d_bce_dice_seed0"}
+{"time": "2026-04-01T16:10:54Z", "status": "done", "dataset_seed": 0, "model": "2d_bce_dice", "output_dir": "result_500\\2d_bce_dice_seed0", "copied_checkpoint": "checkpoints_500\\2d_bce_dice_seed0_best.pt"}
+{"time": "2026-04-01T16:10:54Z", "status": "start", "dataset_seed": 0, "model": "2d_bce_dice_boundary_0.05", "output_dir": "result_500\\2d_bce_dice_boundary_0.05_seed0"}
+{"time": "2026-04-02T02:02:44Z", "status": "done", "dataset_seed": 0, "model": "2d_bce_dice_boundary_0.05", "output_dir": "result_500\\2d_bce_dice_boundary_0.05_seed0", "copied_checkpoint": "checkpoints_500\\2d_bce_dice_boundary_0.05_seed0_best.pt"}
+{"time": "2026-04-02T02:02:44Z", "status": "start", "dataset_seed": 0, "model": "25d_bce_dice", "output_dir": "result_500\\25d_bce_dice_seed0"}
+{"time": "2026-04-02T02:31:52Z", "status": "failed", "dataset_seed": 0, "model": "25d_bce_dice", "output_dir": "result_500\\25d_bce_dice_seed0", "error": "AcceleratorError(\"CUDA error: out of memory\\nSearch for `cudaErrorMemoryAllocation' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.\\nCUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.\\nFor debugging consider passing CUDA_LAUNCH_BLOCKING=1\\nCompile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.\\n\")"}
+{"time": "2026-04-02T17:15:04Z", "status": "skipped", "dataset_seed": 0, "model": "2d_bce_dice", "output_dir": "result_500\\2d_bce_dice_seed0"}
+{"time": "2026-04-02T17:15:04Z", "status": "skipped", "dataset_seed": 0, "model": "2d_bce_dice_boundary_0.05", "output_dir": "result_500\\2d_bce_dice_boundary_0.05_seed0"}
+{"time": "2026-04-02T17:15:04Z", "status": "start", "dataset_seed": 0, "model": "25d_bce_dice", "output_dir": "result_500\\25d_bce_dice_seed0"}
+{"time": "2026-04-02T17:17:59Z", "status": "skipped", "dataset_seed": 0, "model": "2d_bce_dice", "output_dir": "result_500\\2d_bce_dice_seed0"}
+{"time": "2026-04-02T17:17:59Z", "status": "skipped", "dataset_seed": 0, "model": "2d_bce_dice_boundary_0.05", "output_dir": "result_500\\2d_bce_dice_boundary_0.05_seed0"}
+{"time": "2026-04-02T17:17:59Z", "status": "start", "dataset_seed": 0, "model": "25d_bce_dice", "output_dir": "result_500\\25d_bce_dice_seed0"}
