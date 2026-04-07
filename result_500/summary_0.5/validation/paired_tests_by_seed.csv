@@ -1,0 +1,37 @@
+seed, lhs_model   , rhs_model   , metric, ttest_pvalue, wilcoxon_pvalue
+   0, 2d_boundary , 2d_bce_dice , dice  , 1.33e-07    , 1.47e-09
+   1, 2d_boundary , 2d_bce_dice , dice  , 0.00458     , 4.48e-05
+   2, 2d_boundary , 2d_bce_dice , dice  , 0.048       , 0.221
+   0, 2d_boundary , 2d_bce_dice , hd95  , 3.82e-06    , 1.54e-12
+   1, 2d_boundary , 2d_bce_dice , hd95  , 0.0384      , 0.0422
+   2, 2d_boundary , 2d_bce_dice , hd95  , 0.462       , 0.189
+   0, 2d_boundary , 2d_bce_dice , fpr   , 0.000483    , 0.000511
+   1, 2d_boundary , 2d_bce_dice , fpr   , 1.69e-41    , 5.7e-18
+   2, 2d_boundary , 2d_bce_dice , fpr   , 6.48e-38    , 3.9e-18
+   0, 2d_boundary , 2d_bce_dice , fnr   , 0.076       , 0.0222
+   1, 2d_boundary , 2d_bce_dice , fnr   , 6.29e-20    , 2.96e-17
+   2, 2d_boundary , 2d_bce_dice , fnr   , 7.41e-11    , 2.34e-14
+   0, 25d_boundary, 25d_bce_dice, dice  , 7.44e-07    , 1.97e-08
+   1, 25d_boundary, 25d_bce_dice, dice  , 0.757       , 0.618
+   2, 25d_boundary, 25d_bce_dice, dice  , 0.32        , 0.0283
+   0, 25d_boundary, 25d_bce_dice, hd95  , 0.02        , 2.49e-05
+   1, 25d_boundary, 25d_bce_dice, hd95  , 0.315       , 0.348
+   2, 25d_boundary, 25d_bce_dice, hd95  , 0.759       , 0.877
+   0, 25d_boundary, 25d_bce_dice, fpr   , 5.88e-43    , 3.9e-18
+   1, 25d_boundary, 25d_bce_dice, fpr   , 2.24e-26    , 2.6e-17
+   2, 25d_boundary, 25d_bce_dice, fpr   , 1.39e-40    , 5.87e-18
+   0, 25d_boundary, 25d_bce_dice, fnr   , 7.22e-14    , 5.36e-15
+   1, 25d_boundary, 25d_bce_dice, fnr   , 1.74e-16    , 4.93e-16
+   2, 25d_boundary, 25d_bce_dice, fnr   , 8.47e-14    , 2.5e-15
+   0, 25d_boundary, 2d_boundary , dice  , 0.362       , 0.842
+   1, 25d_boundary, 2d_boundary , dice  , 0.000127    , 7.48e-09
+   2, 25d_boundary, 2d_boundary , dice  , 1.31e-06    , 2.77e-09
+   0, 25d_boundary, 2d_boundary , hd95  , 0.0932      , 0.341
+   1, 25d_boundary, 2d_boundary , hd95  , 0.732       , 5.59e-05
+   2, 25d_boundary, 2d_boundary , hd95  , 0.156       , 0.0475
+   0, 25d_boundary, 2d_boundary , fpr   , 1.64e-13    , 9.86e-12
+   1, 25d_boundary, 2d_boundary , fpr   , 2.32e-31    , 4.89e-17
+   2, 25d_boundary, 2d_boundary , fpr   , 1.83e-13    , 1.67e-11
+   0, 25d_boundary, 2d_boundary , fnr   , 0.000335    , 0.000104
+   1, 25d_boundary, 2d_boundary , fnr   , 0.0175      , 0.0169
+   2, 25d_boundary, 2d_boundary , fnr   , 0.592       , 0.735

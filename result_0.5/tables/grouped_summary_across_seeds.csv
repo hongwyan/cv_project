@@ -1,0 +1,25 @@
+grouping_type, group_name       , metric    , mean_across_seeds      , std_across_seeds     , n_seeds_used
+complexity   , high_complexity  , delta_dice, 0.004553294840372261   , 0.004560121130350272 ,            5
+complexity   , high_complexity  , delta_fnr , -0.0057428193953202086 , 0.024489384842142428 ,            5
+complexity   , high_complexity  , delta_fpr , -0.05814358905031407   , 0.09348069049045546  ,            5
+complexity   , high_complexity  , delta_hd95, 0.3017150004704794     , 3.586647377841761    ,            5
+complexity   , low_complexity   , delta_dice, -0.0007500636219920642 , 0.0024990180943757013,            5
+complexity   , low_complexity   , delta_fnr , -0.0027473787883893716 , 0.012243105579769743 ,            5
+complexity   , low_complexity   , delta_fpr , -0.07426714885445222   , 0.08045457891179808  ,            5
+complexity   , low_complexity   , delta_hd95, 0.35821030139923093    , 0.8477215561792198   ,            5
+complexity   , medium_complexity, delta_dice, -0.014223856991016475  , 0.02333996638921502  ,            5
+complexity   , medium_complexity, delta_fnr , 0.006748385010292966   , 0.02612522673093424  ,            5
+complexity   , medium_complexity, delta_fpr , -0.029871412535767982  , 0.07355094910204152  ,            5
+complexity   , medium_complexity, delta_hd95, 2.627054413159688      , 5.172097008677903    ,            5
+size         , large            , delta_dice, -0.010715293087239269  , 0.009801133535520994 ,            5
+size         , large            , delta_fnr , -0.0031693911180432363 , 0.011292513930745951 ,            5
+size         , large            , delta_fpr , -0.05339166924523438   , 0.09044574169804341  ,            5
+size         , large            , delta_hd95, 0.9428257385889689     , 1.4159981825735355   ,            5
+size         , medium           , delta_dice, 0.00018078586557380324 , 0.0034532777175523776,            5
+size         , medium           , delta_fnr , 0.0045737349170040485  , 0.008076528641131913 ,            5
+size         , medium           , delta_fpr , -0.08938416411438134   , 0.0887301349767166   ,            5
+size         , medium           , delta_hd95, 0.30796742439270014    , 0.7609376163897746   ,            5
+size         , small            , delta_dice, -0.00010210481872612587, 0.017675810613069783 ,            5
+size         , small            , delta_fnr , -0.0030464624263804134 , 0.031090287421204055 ,            5
+size         , small            , delta_fpr , -0.03319652502430197   , 0.08489284065111947  ,            5
+size         , small            , delta_hd95, 1.616692489385605      , 5.242764139620095    ,            5

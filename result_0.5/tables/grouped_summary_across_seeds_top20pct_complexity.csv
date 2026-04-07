@@ -1,0 +1,5 @@
+grouping_type,group_name,metric,mean_across_seeds,std_across_seeds,n_seeds_used
+complexity_top_20pct,top_20pct,delta_dice,0.013757636277337778,0.0255483806868509,5
+complexity_top_20pct,top_20pct,delta_fnr,-0.02104112967777566,0.05553606686152528,5
+complexity_top_20pct,top_20pct,delta_fpr,-0.081455889577733,0.1344112831275252,5
+complexity_top_20pct,top_20pct,delta_hd95,-0.4543827414512636,6.402728844324685,5

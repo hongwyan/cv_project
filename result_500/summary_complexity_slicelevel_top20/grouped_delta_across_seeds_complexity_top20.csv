@@ -1,0 +1,9 @@
+group_name,comparison,metric,mean_across_seeds,std_across_seeds,n_seeds_used
+complexity_top20pct,25d_boundary_vs_2d_boundary,dice,0.03417220113490313,0.0060512966972545565,3
+complexity_top20pct,25d_boundary_vs_2d_boundary,hd95,-2.6493186311936276,3.5771134134259697,3
+complexity_top20pct,25d_boundary_vs_nonboundary,dice,-0.001514558221976414,0.012385079064668163,3
+complexity_top20pct,25d_boundary_vs_nonboundary,hd95,2.932541874446714,3.1269818895559447,3
+complexity_top20pct,25d_vs_2d_bce_dice,dice,0.04132240562986872,0.01250587753629414,3
+complexity_top20pct,25d_vs_2d_bce_dice,hd95,-7.105763358149365,4.428267404610697,3
+complexity_top20pct,2d_boundary_vs_nonboundary,dice,0.012829113632069919,0.009439723277865504,3
+complexity_top20pct,2d_boundary_vs_nonboundary,hd95,-1.463647141626902,3.1361538261602075,3

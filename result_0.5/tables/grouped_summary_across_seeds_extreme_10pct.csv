@@ -1,0 +1,17 @@
+grouping_type           , group_name  , metric    , mean_across_seeds     , std_across_seeds     , n_seeds_used
+complexity_extreme_10pct, bottom_10pct, delta_dice, 7.275608012800028e-05 ,  0.020097835974261787,            5
+complexity_extreme_10pct, bottom_10pct, delta_fnr , -0.010810810810810811 ,  0.025859222824712688,            5
+complexity_extreme_10pct, bottom_10pct, delta_fpr , -0.06644759007628206  ,  0.11556483842021467 ,            5
+complexity_extreme_10pct, bottom_10pct, delta_hd95, 1.3478601455688477    ,  2.8068288298929702  ,            5
+complexity_extreme_10pct, top_10pct   , delta_dice, 0.02205144606157089   ,  0.045024119464130624,            5
+complexity_extreme_10pct, top_10pct   , delta_fnr , -0.0006357927786499213,  0.05992326732022042 ,            5
+complexity_extreme_10pct, top_10pct   , delta_fpr , -0.08183836645705328  ,  0.14075365076210006 ,            5
+complexity_extreme_10pct, top_10pct   , delta_hd95, -4.045322227478027    ,  7.849941334592143   ,            5
+size_extreme_10pct      , bottom_10pct, delta_dice, 0.00587968344105817   ,  0.04944110022648177 ,            5
+size_extreme_10pct      , bottom_10pct, delta_fnr , -0.03871321361565264  ,  0.07192485063374972 ,            5
+size_extreme_10pct      , bottom_10pct, delta_fpr , -0.07983335392572498  ,  0.1431060573467704  ,            5
+size_extreme_10pct      , bottom_10pct, delta_hd95, 4.4978834867477415    , 14.14168459187968    ,            5
+size_extreme_10pct      , top_10pct   , delta_dice, 0.0005264610666694703 ,  0.004461751083698119,            5
+size_extreme_10pct      , top_10pct   , delta_fnr , 0.0025974025974025974 ,  0.005807968772726726,            5
+size_extreme_10pct      , top_10pct   , delta_fpr , -0.07401078453710033  ,  0.07743460235488259 ,            5
+size_extreme_10pct      , top_10pct   , delta_hd95, -0.21509251594543458  ,  0.29704979211040045 ,            5

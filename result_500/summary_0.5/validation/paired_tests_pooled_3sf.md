@@ -1,0 +1,14 @@
+| lhs_model | rhs_model | metric | ttest_pvalue | wilcoxon_pvalue |
+|---|---|---|---|---|
+| 2d_boundary | 2d_bce_dice | dice | 0.955 | 0.334 |
+| 2d_boundary | 2d_bce_dice | hd95 | 0.00636 | 4.98e-06 |
+| 2d_boundary | 2d_bce_dice | fpr | 7.96e-60 | 1.49e-42 |
+| 2d_boundary | 2d_bce_dice | fnr | 1.33e-26 | 6.58e-32 |
+| 25d_boundary | 25d_bce_dice | dice | 7.86e-05 | 8.21e-07 |
+| 25d_boundary | 25d_bce_dice | hd95 | 0.0124 | 0.064 |
+| 25d_boundary | 25d_bce_dice | fpr | 5.7e-88 | 6.07e-50 |
+| 25d_boundary | 25d_bce_dice | fnr | 1.06e-39 | 5.28e-43 |
+| 25d_boundary | 2d_boundary | dice | 1.44e-07 | 1.68e-12 |
+| 25d_boundary | 2d_boundary | hd95 | 0.772 | 3.6e-05 |
+| 25d_boundary | 2d_boundary | fpr | 1.78e-16 | 2.21e-14 |
+| 25d_boundary | 2d_boundary | fnr | 0.772 | 0.944 |

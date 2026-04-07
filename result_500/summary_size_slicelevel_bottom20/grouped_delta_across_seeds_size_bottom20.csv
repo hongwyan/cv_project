@@ -1,0 +1,9 @@
+group_name,comparison,metric,mean_across_seeds,std_across_seeds,n_seeds_used
+size_bottom20pct,25d_boundary_vs_2d_boundary,dice,0.03707201078553063,0.009640823091948227,3
+size_bottom20pct,25d_boundary_vs_2d_boundary,hd95,-2.860440432307815,3.8604222172944853,3
+size_bottom20pct,25d_boundary_vs_nonboundary,dice,-0.002096131295078542,0.011481252151187712,3
+size_bottom20pct,25d_boundary_vs_nonboundary,hd95,3.938248292303392,3.0316397724690782,3
+size_bottom20pct,25d_vs_2d_bce_dice,dice,0.04561554702407363,0.014852485962658857,3
+size_bottom20pct,25d_vs_2d_bce_dice,hd95,-8.345848887092219,4.755636293601388,3
+size_bottom20pct,2d_boundary_vs_nonboundary,dice,0.0123589263046886,0.010953468316806434,3
+size_bottom20pct,2d_boundary_vs_nonboundary,hd95,-1.2618422357623043,3.2014179766713537,3

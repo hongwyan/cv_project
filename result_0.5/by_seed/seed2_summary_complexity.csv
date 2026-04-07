@@ -1,0 +1,13 @@
+grouping_type,group_name,metric,count,mean,std,seed
+complexity,high_complexity,delta_dice,3,0.0018341296721160472,0.07385497995798843,2
+complexity,high_complexity,delta_hd95,3,-3.5486894051233926,13.813764523943814,2
+complexity,high_complexity,delta_fnr,3,-0.029795918367346935,0.07960439461371407,2
+complexity,high_complexity,delta_fpr,3,0.01214801710157746,0.09215345116823256,2
+complexity,low_complexity,delta_dice,4,0.0013645968552236931,0.0011890358150790097,2
+complexity,low_complexity,delta_hd95,4,0.0,0.4782926432380585,2
+complexity,low_complexity,delta_fnr,4,-0.020555767034640276,0.02598189036388062,2
+complexity,low_complexity,delta_fpr,4,0.004046205581293298,0.016738457023516465,2
+complexity,medium_complexity,delta_dice,3,0.005164749137591351,0.015086961998852238,2
+complexity,medium_complexity,delta_hd95,3,0.2561607360839844,0.2751429402961545,2
+complexity,medium_complexity,delta_fnr,3,-0.007480509210743454,0.037373185823043505,2
+complexity,medium_complexity,delta_fpr,3,-0.009762068244917451,0.16084239061908842,2

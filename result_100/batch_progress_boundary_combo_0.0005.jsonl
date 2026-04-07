@@ -1,0 +1,11 @@
+{"time": "2026-03-22T21:35:43Z", "status": "start", "dataset_seed": 0, "model": "2d_boundary_combo", "w_sboundary": "0.0005", "output_dir": "result_100\\2d_boundary_combo_seed0_0.0005"}
+{"time": "2026-03-22T23:47:30Z", "status": "done", "dataset_seed": 0, "model": "2d_boundary_combo", "w_sboundary": "0.0005", "output_dir": "result_100\\2d_boundary_combo_seed0_0.0005"}
+{"time": "2026-03-22T23:47:30Z", "status": "start", "dataset_seed": 0, "model": "25d_boundary_combo", "w_sboundary": "0.0005", "output_dir": "result_100\\25d_boundary_combo_seed0_0.0005"}
+{"time": "2026-03-23T01:48:21Z", "status": "done", "dataset_seed": 0, "model": "25d_boundary_combo", "w_sboundary": "0.0005", "output_dir": "result_100\\25d_boundary_combo_seed0_0.0005"}
+{"time": "2026-03-23T01:48:21Z", "status": "start", "dataset_seed": 1, "model": "2d_boundary_combo", "w_sboundary": "0.0005", "output_dir": "result_100\\2d_boundary_combo_seed1_0.0005"}
+{"time": "2026-03-23T04:01:35Z", "status": "done", "dataset_seed": 1, "model": "2d_boundary_combo", "w_sboundary": "0.0005", "output_dir": "result_100\\2d_boundary_combo_seed1_0.0005"}
+{"time": "2026-03-23T04:01:35Z", "status": "start", "dataset_seed": 1, "model": "25d_boundary_combo", "w_sboundary": "0.0005", "output_dir": "result_100\\25d_boundary_combo_seed1_0.0005"}
+{"time": "2026-03-23T04:56:31Z", "status": "skipped", "dataset_seed": 0, "model": "2d_boundary_combo", "w_sboundary": "0.0005", "output_dir": "result_100\\2d_boundary_combo_seed0_0.0005"}
+{"time": "2026-03-23T04:56:31Z", "status": "skipped", "dataset_seed": 0, "model": "25d_boundary_combo", "w_sboundary": "0.0005", "output_dir": "result_100\\25d_boundary_combo_seed0_0.0005"}
+{"time": "2026-03-23T04:56:31Z", "status": "skipped", "dataset_seed": 1, "model": "2d_boundary_combo", "w_sboundary": "0.0005", "output_dir": "result_100\\2d_boundary_combo_seed1_0.0005"}
+{"time": "2026-03-23T04:56:31Z", "status": "start", "dataset_seed": 1, "model": "25d_boundary_combo", "w_sboundary": "0.0005", "output_dir": "result_100\\25d_boundary_combo_seed1_0.0005"}

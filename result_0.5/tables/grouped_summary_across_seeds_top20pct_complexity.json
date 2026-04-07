@@ -1,0 +1,34 @@
+[
+  {
+    "grouping_type":"complexity_top_20pct",
+    "group_name":"top_20pct",
+    "metric":"delta_dice",
+    "mean_across_seeds":0.0137576363,
+    "std_across_seeds":0.0255483807,
+    "n_seeds_used":5
+  },
+  {
+    "grouping_type":"complexity_top_20pct",
+    "group_name":"top_20pct",
+    "metric":"delta_fnr",
+    "mean_across_seeds":-0.0210411297,
+    "std_across_seeds":0.0555360669,
+    "n_seeds_used":5
+  },
+  {
+    "grouping_type":"complexity_top_20pct",
+    "group_name":"top_20pct",
+    "metric":"delta_fpr",
+    "mean_across_seeds":-0.0814558896,
+    "std_across_seeds":0.1344112831,
+    "n_seeds_used":5
+  },
+  {
+    "grouping_type":"complexity_top_20pct",
+    "group_name":"top_20pct",
+    "metric":"delta_hd95",
+    "mean_across_seeds":-0.4543827415,
+    "std_across_seeds":6.4027288443,
+    "n_seeds_used":5
+  }
+]
