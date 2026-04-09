@@ -132,17 +132,6 @@
     "fpr_std":0.0447911591
   },
   {
-    "model":"25d_bce_dice_boundary_0.01",
-    "dice_mean":0.7906107707,
-    "dice_std":0.0404033733,
-    "hd95_median_mean":5.2992667198,
-    "hd95_median_std":1.6291541958,
-    "fnr_mean":0.0239538261,
-    "fnr_std":0.0156019468,
-    "fpr_mean":0.2538705913,
-    "fpr_std":0.0535088316
-  },
-  {
     "model":"25d_bce_dice_boundary_0.05",
     "dice_mean":0.7869259435,
     "dice_std":0.0434216936,

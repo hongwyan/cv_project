@@ -1,0 +1,5 @@
+model,n_patients_total,n_patients_used_for_dice,dice_mean,dice_std,n_patients_used_for_hd95,hd95_median,hd95_iqr,n_patients_used_for_fnr,fnr_mean,fnr_std,n_patients_used_for_fpr,fpr_mean,fpr_std
+2d_bce_dice,300,300,0.87,0.114,300,6.63,31,300,0.0569,0.0728,300,0.159,0.177
+2d_boundary,300,300,0.87,0.114,300,14.4,41.6,300,0.0176,0.036,300,0.387,0.173
+25d_bce_dice,300,300,0.89,0.0982,300,4.12,6.94,300,0.082,0.0923,300,0.0398,0.0705
+25d_boundary,300,300,0.881,0.104,300,7.93,28.6,300,0.0181,0.0429,300,0.314,0.183

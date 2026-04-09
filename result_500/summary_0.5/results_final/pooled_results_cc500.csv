@@ -1,0 +1,5 @@
+model,n_patients_total,n_patients_used_for_dice,dice_mean,dice_std,n_patients_used_for_hd95,hd95_median,hd95_iqr
+2d_bce_dice,300,300,0.877,0.11,300,4.47,11.1
+2d_boundary,300,300,0.881,0.109,300,5.1,17.9
+25d_bce_dice,300,300,0.892,0.0978,300,4.12,5.78
+25d_boundary,300,300,0.889,0.0979,300,4.12,13.2

@@ -23,7 +23,6 @@ MODEL_ORDER = [
     "25d_dice",
     "25d_bce_dice",
     "25d_bce_dice_posweighted",
-    "25d_bce_dice_boundary_0.01",
     "25d_bce_dice_boundary_0.05",
     "25d_bce_dice_boundary_0.1",
     "25d_bce_dice_boundary_0.2",
@@ -32,6 +31,13 @@ MODEL_ORDER = [
     "25d_bce_dice_posweighted_boundary_0.2",
 ]
 TARGET_METRICS = ["dice", "hd95_median", "fnr", "fpr"]
+MODEL_COLORS = {
+    "2d_bce_dice": "#2ca02c",
+    "25d_bce_dice": "#2ca02c",
+    "2d_bce_dice_boundary_0.05": "#d62728",
+    "25d_bce_dice_boundary_0.05": "#d62728",
+}
+DEFAULT_BAR_COLOR = "#1f77b4"
 
 
 def parse_args():
@@ -86,6 +92,7 @@ def build_summary(df: pd.DataFrame):
     agg = df.groupby("model")[TARGET_METRICS].agg(["mean", "std"])
     agg.columns = [f"{metric}_{stat}" for metric, stat in agg.columns]
     agg = agg.reset_index()
+    agg = agg[agg["model"] != "25d_bce_dice_boundary_0.01"].copy()
     present_models = [m for m in MODEL_ORDER if m in agg["model"].tolist()]
     agg["model"] = pd.Categorical(agg["model"], categories=present_models, ordered=True)
     agg = agg.sort_values("model").reset_index(drop=True)
@@ -102,14 +109,41 @@ def plot_metric_bar(summary_df: pd.DataFrame, metric: str, y_label: str, title: 
     x = np.arange(len(summary_df))
     means = summary_df[f"{metric}_mean"].to_numpy(dtype=float)
     stds = summary_df[f"{metric}_std"].fillna(0.0).to_numpy(dtype=float)
+    upper = means + stds
+    colors = [MODEL_COLORS.get(model_name, DEFAULT_BAR_COLOR) for model_name in summary_df["model"]]
 
     plt.figure(figsize=(10, 5))
-    plt.bar(x, means, yerr=stds, capsize=4)
+    bars = plt.bar(x, means, yerr=stds, capsize=4, color=colors)
     plt.xticks(x, summary_df["model"], rotation=25, ha="right")
     plt.ylabel(y_label)
     plt.title(title)
     if ylim is not None:
         plt.ylim(*ylim)
+        y_min, y_max = ylim
+    else:
+        y_min = float(np.nanmin(np.minimum(means, 0.0))) if len(means) else 0.0
+        y_max = float(np.nanmax(upper)) if len(upper) else 1.0
+        if not np.isfinite(y_max):
+            y_max = 1.0
+        pad = max((y_max - y_min) * 0.12, 0.05 if y_max <= 1.0 else 0.5)
+        plt.ylim(y_min, y_max + pad)
+        y_max = y_max + pad
+
+    span = max(y_max - y_min, 1e-6)
+    text_offset = span * 0.02
+    top_margin = span * 0.03
+    for bar, mean, std in zip(bars, means, stds):
+        height = bar.get_height()
+        text_y = height + max(std, 0.0) + text_offset
+        text_y = min(text_y, y_max - top_margin)
+        plt.text(
+            bar.get_x() + bar.get_width() / 2.0,
+            text_y,
+            fmt_3sf(mean),
+            ha="center",
+            va="bottom",
+            fontsize=9,
+        )
     plt.tight_layout()
     plt.savefig(out_path, dpi=150)
     plt.close()
