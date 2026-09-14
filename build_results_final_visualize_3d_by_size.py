@@ -249,13 +249,13 @@ def main():
             model = context["models"][key]
             volumes[key] = predict_volume(model, flair_n, config.input_mode, args.threshold, device, args.batch_size)
 
-        fig = plt.figure(figsize=(16, 8))
+        fig = plt.figure(figsize=(18, 9))
         gs = GridSpec(2, 3, figure=fig, width_ratios=[1.25, 1, 1])
 
         gt_ax = fig.add_subplot(gs[:, 0], projection="3d")
         add_surface(gt_ax, volumes["gt"], PANEL_COLORS["gt"])
         style_ax(gt_ax)
-        gt_ax.set_title(PANEL_TITLES["gt"], fontsize=12)
+        gt_ax.set_title(PANEL_TITLES["gt"], fontsize=26, pad=18)
 
         panel_positions = {
             "2d_bce_dice": gs[0, 1],
@@ -267,16 +267,11 @@ def main():
             ax = fig.add_subplot(panel_positions[panel_key], projection="3d")
             add_surface(ax, volumes[panel_key], PANEL_COLORS[panel_key])
             style_ax(ax)
-            ax.set_title(PANEL_TITLES[panel_key], fontsize=11)
+            ax.set_title(PANEL_TITLES[panel_key], fontsize=26, pad=16)
 
-        fig.suptitle(
-            f"{group_name} | seed {dataset_seed} | {patient_id} | "
-            f"tumor_vox={int(row['tumor_vox'])} | ratio={row['ratio']:.4f}",
-            fontsize=13,
-        )
-        fig.tight_layout(rect=[0, 0, 1, 0.94])
+        fig.tight_layout()
         out_path = output_dir / f"seed{dataset_seed}_{patient_id}.png"
-        fig.savefig(out_path, dpi=180)
+        fig.savefig(out_path, dpi=320)
         plt.close(fig)
         print(f"Saved: {out_path}")
 

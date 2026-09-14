@@ -1,0 +1,14 @@
+{
+  "workspace": "C:\\Users\\29905\\Documents\\GitHub\\cv_project\\ppt_workspace",
+  "pptx": "C:\\Users\\29905\\Documents\\GitHub\\cv_project\\ppt_workspace\\output\\脑肿瘤MRI精细分割算法研究_答辩PPT.pptx",
+  "checks": {
+    "output_hygiene": {
+      "output_dir": "C:\\Users\\29905\\Documents\\GitHub\\cv_project\\ppt_workspace\\output",
+      "unexpected_files": []
+    }
+  },
+  "failures": [
+    "PPTX package inspection failed: unzip -Z1 C:\\Users\\29905\\Documents\\GitHub\\cv_project\\ppt_workspace\\output\\脑肿瘤MRI精细分割算法研究_答辩PPT.pptx failed"
+  ],
+  "warnings": []
+}

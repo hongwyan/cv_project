@@ -1,0 +1,17 @@
+{
+  "workspace": "C:\\Users\\29905\\Documents\\GitHub\\cv_project\\ppt_workspace\\ppt_workspace",
+  "pptx": "C:\\Users\\29905\\Documents\\GitHub\\cv_project\\defense_outputs\\脑肿瘤MRI精细分割算法研究_答辩PPT.pptx",
+  "checks": {
+    "output_hygiene": {
+      "output_dir": "C:\\Users\\29905\\Documents\\GitHub\\cv_project\\ppt_workspace\\ppt_workspace\\output",
+      "unexpected_files": [
+        "output directory is missing"
+      ]
+    }
+  },
+  "failures": [
+    "PPTX package inspection failed: unzip -Z1 C:\\Users\\29905\\Documents\\GitHub\\cv_project\\defense_outputs\\脑肿瘤MRI精细分割算法研究_答辩PPT.pptx failed",
+    "output/ contains non-deliverable files: output directory is missing"
+  ],
+  "warnings": []
+}
